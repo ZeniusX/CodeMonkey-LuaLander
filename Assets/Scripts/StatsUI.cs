@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +12,24 @@ public class StatsUI : MonoBehaviour
     [SerializeField] private GameObject speedRightArrowGameObject;
     [SerializeField] private Image fuelBarImage;
 
+    private void Start()
+    {
+        Lander.Instance.OnStateChanged += Lander_OnStateChanged;
+
+        Hide();
+    }
+
     private void Update()
     {
         UpdateStatsTextMesh();
+    }
+
+    private void Lander_OnStateChanged(object sender, Lander.OnStateChangedEventArgs e)
+    {
+        if (e.state == Lander.State.Normal)
+        {
+            Show();
+        }
     }
 
     private void UpdateStatsTextMesh()
@@ -46,4 +62,8 @@ public class StatsUI : MonoBehaviour
             Mathf.Abs(Mathf.Round(Lander.Instance.GetSpeedX() * 10f)) + "\n" +
             Mathf.Abs(Mathf.Round(Lander.Instance.GetSpeedY() * 10f));
     }
+
+    private void Show() => gameObject.SetActive(true);
+
+    private void Hide() => gameObject.SetActive(false);
 }
