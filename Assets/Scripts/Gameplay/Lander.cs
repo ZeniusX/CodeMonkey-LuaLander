@@ -81,7 +81,10 @@ public class Lander : MonoBehaviour
         {
             default:
             case State.WaitingToStart:
-                if (Keyboard.current.wKey.isPressed || Keyboard.current.aKey.isPressed || Keyboard.current.dKey.isPressed)
+                if (GameInput.Instance.IsUpActionPressed() ||
+                    GameInput.Instance.IsLeftActionPressed() ||
+                    GameInput.Instance.IsRightActionPressed() ||
+                    GameInput.Instance.GetMovementInputVector2() != Vector2.zero)
                 {
                     landerRigidbody2D.gravityScale = GRAVITY_NORMAL;
                     SetState(State.Normal);
@@ -90,22 +93,29 @@ public class Lander : MonoBehaviour
             case State.Normal:
                 if (fuelAmount <= 0f) return;
 
-                if (Keyboard.current.wKey.isPressed || Keyboard.current.aKey.isPressed || Keyboard.current.dKey.isPressed)
+                if (GameInput.Instance.IsUpActionPressed() ||
+                    GameInput.Instance.IsLeftActionPressed() ||
+                    GameInput.Instance.IsRightActionPressed() ||
+                    GameInput.Instance.GetMovementInputVector2() != Vector2.zero)
                 {
                     ConsumeFuel();
                 }
 
-                if (Keyboard.current.wKey.isPressed)
+                float joystickDeadZone = 0.4f;
+                if (GameInput.Instance.IsUpActionPressed() ||
+                    GameInput.Instance.GetMovementInputVector2().y > joystickDeadZone)
                 {
                     landerRigidbody2D.AddForce(force * transform.up * Time.deltaTime);
                     OnUpForce?.Invoke(this, EventArgs.Empty);
                 }
-                if (Keyboard.current.aKey.isPressed)
+                if (GameInput.Instance.IsLeftActionPressed() ||
+                    GameInput.Instance.GetMovementInputVector2().x < -joystickDeadZone)
                 {
                     landerRigidbody2D.AddTorque(+turnSpeed * Time.deltaTime);
                     OnLeftForce?.Invoke(this, EventArgs.Empty);
                 }
-                if (Keyboard.current.dKey.isPressed)
+                if (GameInput.Instance.IsRightActionPressed() ||
+                    GameInput.Instance.GetMovementInputVector2().x > joystickDeadZone)
                 {
                     landerRigidbody2D.AddTorque(-turnSpeed * Time.deltaTime);
                     OnRightForce?.Invoke(this, EventArgs.Empty);
@@ -115,7 +125,7 @@ public class Lander : MonoBehaviour
                 break;
         }
 
-        if (Keyboard.current.wKey.isPressed || Keyboard.current.aKey.isPressed || Keyboard.current.dKey.isPressed)
+        if (GameInput.Instance.IsUpActionPressed() || GameInput.Instance.IsLeftActionPressed() || GameInput.Instance.IsRightActionPressed())
         {
             ConsumeFuel();
         }

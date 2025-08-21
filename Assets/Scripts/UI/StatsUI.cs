@@ -30,6 +30,10 @@ public class StatsUI : MonoBehaviour
         {
             Show();
         }
+        else
+        {
+            Hide();
+        }
     }
 
     private void UpdateStatsTextMesh()
