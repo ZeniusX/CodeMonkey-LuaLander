@@ -26,6 +26,8 @@ public class LandedUI : MonoBehaviour
     {
         Lander.Instance.OnLanded += Lander_OnLanded;
 
+        nextButton.Select();
+
         Hide();
     }
 
@@ -62,7 +64,11 @@ public class LandedUI : MonoBehaviour
         Show();
     }
 
-    private void Show() => gameObject.SetActive(true);
+    private void Show()
+    {
+        gameObject.SetActive(true);
+        nextButton.Select();
+    }
 
     private void Hide() => gameObject.SetActive(false);
 }
